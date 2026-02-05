@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Ahorro Pro</title>
+    <!-- Fuentes e Iconos Modernos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- DISEÑO NEXT LEVEL --- */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-color: #764ba2;
+            --bg-color: #eef2f5;
+            --text-dark: #2d3748;
+            --text-light: #a0aec0;
+            --white: #ffffff;
+            --success: #48bb78;
+            --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-strong: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Contenedor Principal (Estilo App Nativa) */
+        .app-container {
+            width: 100%;
+            max-width: 414px; /* Ancho típico de móvil grande */
+            height: 100vh;
+            max-height: 896px;
+            background-color: #f8fafc;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-strong);
+        }
+
+        @media (min-width: 450px) {
+            .app-container {
+                height: 90vh;
+                border-radius: 40px;
+                border: 8px solid #fff;
+            }
+        }
+
+        /* --- HEADER CON GRADIENTE --- */
+        header {
+            padding: 2.5rem 1.5rem 3.5rem;
+            background: var(--primary-gradient);
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-top h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-card {
+            text-align: center;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .balance-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .currency-symbol {
+            font-size: 1.5rem;
+            vertical-align: super;
+            opacity: 0.9;
+            margin-right: 5px;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        main {
+            flex: 1;
+            padding: 0 1.5rem;
+            margin-top: -2.5rem; /* Efecto de superposición */
+            z-index: 20;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+
+        /* Tarjeta de Ingreso */
+        .action-card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        /* Chips de selección rápida */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+            justify-content: center;
+        }
+
+        .chip {
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .chip:active {
+            transform: scale(0.95);
+        }
+
+        /* Input con Icono */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+            background: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        .amount-input:focus {
+            border-color: var(--secondary-color);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+        }
+
+        /* Botones de Acción */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-deposit {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.2);
+        }
+
+        .btn-withdraw {
+            background: #fff;
+            color: #e53e3e;
+            border: 2px solid #e53e3e;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        /* --- LISTA DE MOVIMIENTOS --- */
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .transactions-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .transaction-list {
+            list-style: none;
+        }
+
+        .transaction-item {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+            animation: slideInRight 0.5s ease-out backwards;
+        }
+
+        .t-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(72, 187, 120, 0.1);
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--success);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .t-icon.withdrawal {
+            background: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+
+        .t-details {
+            flex: 1;
+        }
+
+        .t-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .t-date {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .t-amount {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+        }
+
+        .t-amount.withdrawal {
+            color: #e53e3e;
+        }
+
+        /* Botón Reset */
+        .settings-area {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-bottom: 1rem;
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-reset:hover {
+            color: #e53e3e;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pop-anim {
+            animation: pop 0.3s ease-in-out;
+        }
+
+        /* Ocultar scrollbar */
+        main::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* --- NOTIFICACIONES (TOAST) --- */
+        .notification-container {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: toastEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            pointer-events: auto;
+            border-left: 5px solid #ccc;
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: #e53e3e; }
+
+        .toast-icon { font-size: 1.4rem; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: #e53e3e; }
+
+        .toast-msg { font-size: 0.9rem; font-weight: 500; color: var(--text-dark); }
+
+        @keyframes toastEnter {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastExit {
+            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+        }
+
+        /* --- FOOTER CRÉDITOS --- */
+        .app-footer {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            color: var(--text-light);
+        }
+        .creator-badge {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .creator-name {
+            color: var(--secondary-color);
+            font-weight: 700;
+            display: block;
+            font-size: 1rem;
+            margin-top: 2px;
+            animation: namePulse 3s infinite ease-in-out;
+        }
+        @keyframes namePulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; color: #667eea; text-shadow: 0 0 10px rgba(102, 126, 234, 0.3); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <div class="header-top">
+                <div>
+                    <h2><i class="fas fa-wallet"></i> Mi Billetera</h2>
+                    <div id="userEmailDisplay" style="font-size: 0.8rem; opacity: 0.8; font-weight: 400; margin-top: 2px;"></div>
+                </div>
+                <i class="fas fa-sign-out-alt" onclick="logout()" style="font-size: 1.2rem; opacity: 0.8; cursor: pointer;" title="Cerrar Sesión"></i>
+            </div>
+            <div class="balance-card">
+                <div class="balance-label">Saldo Disponible</div>
+                <div class="balance-amount">
+                    <span class="currency-symbol">L</span><span id="totalBalance">0.00</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Contenedor de Notificaciones -->
+        <div id="notificationContainer" class="notification-container"></div>
+
+        <main>
+            <!-- Tarjeta de Acción -->
+            <div class="action-card">
+                <div class="quick-actions">
+                    <div class="chip" onclick="setAmount(50)">+ L 50</div>
+                    <div class="chip" onclick="setAmount(100)">+ L 100</div>
+                    <div class="chip" onclick="setAmount(500)">+ L 500</div>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <input type="number" id="amount" class="amount-input" placeholder="Ingresa otro monto..." min="1">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-action btn-deposit" onclick="addMoney()">
+                        <i class="fas fa-plus-circle"></i> Ingresar
+                    </button>
+                    <button class="btn-action btn-withdraw" onclick="withdrawMoney()">
+                        <i class="fas fa-minus-circle"></i> Retirar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Historial -->
+            <div class="transactions-header">
+                <h3>Movimientos</h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-file-csv" onclick="exportToCSV()" style="cursor: pointer; color: var(--secondary-color); font-size: 1.2rem;" title="Exportar a CSV"></i>
+                    <span style="font-size: 0.8rem; color: #a0aec0; font-weight: 500;">Recientes</span>
+                </div>
+            </div>
+
+            <ul class="transaction-list" id="transactionList">
+                <!-- Items dinámicos -->
+            </ul>
+
+            <div class="settings-area">
+                <button class="btn-reset" onclick="resetData()">
+                    <i class="fas fa-trash-alt"></i> Reiniciar Billetera
+                </button>
+            </div>
+
+            <!-- Créditos del Dueño -->
+            <footer class="app-footer">
+                <div class="creator-badge">Desarrollado por</div>
+                <span class="creator-name">Antonio España</span>
+                <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 4px;">CEO & Founder</div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // --- LÓGICA JAVASCRIPT ---
+
+        // 0. Verificar Sesión y Obtener Usuario
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'Login.html'; // Si no hay usuario, volver al login
+        }
+
+        // Mostrar usuario en el header
+        document.getElementById('userEmailDisplay').innerText = currentUser;
+
+        let balance = 0;
+        let transactions = [];
+
+        // 1. Cargar datos (Usamos claves únicas combinando con el correo del usuario)
+        function loadData() {
+            const savedBalance = localStorage.getItem(`mySavingsBalance_${currentUser}`);
+            const savedTransactions = localStorage.getItem(`mySavingsHistory_${currentUser}`);
+
+            if (savedBalance) balance = parseFloat(savedBalance);
+            if (savedTransactions) transactions = JSON.parse(savedTransactions);
+
+            updateUI(false);
+        }
+
+        // 2. Helper para los botones rápidos (Chips)
+        function setAmount(val) {
+            const input = document.getElementById('amount');
+            input.value = val;
+            input.focus();
+            // Pequeño efecto visual
+            input.style.borderColor = 'var(--secondary-color)';
+            setTimeout(() => input.style.borderColor = '#e2e8f0', 300);
+        }
+
+        // 2.1 Sistema de Notificaciones
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            toast.innerHTML = `<i class="fas ${icon} toast-icon"></i><span class="toast-msg">${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'toastExit 0.4s ease forwards';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // 3. Agregar dinero
+        function addMoney() {
+            const input = document.getElementById('amount');
+            const amount = parseFloat(input.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                showNotification("Ingresa un monto válido", "error");
+                return;
+            }
+
+            balance += amount;
+            
+            const newTransaction = {
+                id: Date.now(),
+                amount: amount,
+                date: new Date(), // Guardamos fecha completa
+                type: 'deposit'
+            };
+
+            transactions.unshift(newTransaction);
+            saveData();
+            
+            input.value = '';
+            updateUI(true); // true = animar
+            showNotification(`¡Ingresaste L ${amount}!`, "success");
+        }
+
+        // 3.1 Retirar dinero
+        function withdrawMoney() {
+            const input = document.getElementById('amount');
+            const amount = parseFloat(input.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                showNotification("Ingresa un monto válido", "error");
+                return;
+            }
+
+            if (amount > balance) {
+                showNotification("Saldo insuficiente", "error");
+                return;
+            }
+
+            balance -= amount;
+            
+            const newTransaction = {
+                id: Date.now(),
+                amount: amount,
+                date: new Date(),
+                type: 'withdrawal'
+            };
+
+            transactions.unshift(newTransaction);
+            saveData();
+            
+            input.value = '';
+            updateUI(true);
+            showNotification(`Retiraste L ${amount}`, "success");
+        }
+
+        // 4. Guardar
+        function saveData() {
+            // Guardamos usando el correo como identificador único
+            localStorage.setItem(`mySavingsBalance_${currentUser}`, balance);
+            localStorage.setItem(`mySavingsHistory_${currentUser}`, JSON.stringify(transactions));
+        }
+
+        // 5. Formatear fecha bonita (Ej: "Hoy, 10:30 AM")
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const timeStr = date.toLocaleTimeString('es-HN', { hour: '2-digit', minute: '2-digit' });
+
+            if (date.toDateString() === today.toDateString()) {
+                return `Hoy, ${timeStr}`;
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return `Ayer, ${timeStr}`;
+            } else {
+                return `${date.toLocaleDateString('es-HN', { day: 'numeric', month: 'short' })}, ${timeStr}`;
+            }
+        }
+
+        // 6. Actualizar UI
+        function updateUI(isNewEntry) {
+            // Actualizar Saldo
+            const balanceEl = document.getElementById('totalBalance');
+            balanceEl.innerText = balance.toLocaleString('es-HN', {minimumFractionDigits: 2});
+            
+            // Efecto "Pop" en el saldo si es nuevo ingreso
+            if(isNewEntry) {
+                balanceEl.parentElement.classList.add('pop-anim');
+                setTimeout(() => balanceEl.parentElement.classList.remove('pop-anim'), 300);
+            }
+
+            // Actualizar Lista
+            const listElement = document.getElementById('transactionList');
+            listElement.innerHTML = '';
+
+            if (transactions.length === 0) {
+                listElement.innerHTML = `
+                    <div style="text-align:center; padding: 2rem; color: #cbd5e0;">
+                        <i class="fas fa-piggy-bank" style="font-size: 3rem; margin-bottom: 10px; display:block; opacity: 0.5;"></i>
+                        <p>Empieza a ahorrar hoy</p>
+                    </div>`;
+                return;
+            }
+
+            transactions.forEach((t, index) => {
+                const li = document.createElement('li');
+                li.className = 'transaction-item';
+                // Animación escalonada (stagger)
+                li.style.animationDelay = `${index * 0.05}s`;
+                
+                const isDeposit = (t.type === 'deposit' || !t.type);
+                const iconClass = isDeposit ? 'fa-arrow-down' : 'fa-arrow-up';
+                const typeClass = isDeposit ? '' : 'withdrawal';
+                const sign = isDeposit ? '+' : '-';
+                const title = isDeposit ? 'Ingreso de Ahorro' : 'Retiro de Dinero';
+
+                li.innerHTML = `
+                    <div class="t-icon ${typeClass}">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="t-details">
+                        <span class="t-title">${title}</span>
+                        <span class="t-date">${formatDate(t.date)}</span>
+                    </div>
+                    <span class="t-amount ${typeClass}">${sign} L ${t.amount.toLocaleString('es-HN')}</span>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
+        // 7. Reset
+        function resetData() {
+            if(confirm("¿Estás seguro de reiniciar tu billetera a cero?")) {
+                balance = 0;
+                transactions = [];
+                saveData();
+                updateUI(false);
+            }
+        }
+
+        // 8. Cerrar Sesión
+        function logout() {
+            localStorage.removeItem('currentUser'); // Borrar sesión
+            window.location.href = 'Login.html';
+        }
+
+        // 9. Exportar a CSV
+        function exportToCSV() {
+            if (transactions.length === 0) {
+                showNotification("No hay movimientos para exportar", "error");
+                return;
+            }
+
+            // Encabezados CSV
+            let csvContent = "Fecha,Hora,Tipo,Monto\n";
+
+            transactions.forEach(t => {
+                const dateObj = new Date(t.date);
+                const date = dateObj.toLocaleDateString('es-HN');
+                const time = dateObj.toLocaleTimeString('es-HN');
+                const type = (t.type === 'deposit' || !t.type) ? 'Ingreso' : 'Retiro';
+                const amount = t.amount;
+                csvContent += `${date},${time},${type},${amount}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `historial_${currentUser.split('@')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotification("Archivo CSV descargado", "success");
+        }
+
+        // Iniciar
+        loadData();
+
+        // Validación de UI: Prevenir escritura de signos negativos
+        document.getElementById('amount').addEventListener('keydown', (e) => {
+            if (e.key === '-' || e.key === 'e') {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
