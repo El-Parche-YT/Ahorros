@@ -316,6 +316,11 @@
         const notifMessage = document.getElementById('notif-message');
         const notifIcon = document.getElementById('notif-icon');
 
+        // --- AUTO-LOGIN: Si ya hay usuario, ir directo a la app ---
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'index.html';
+        }
+
         function showNotification(message, icon = '✅') {
             notifMessage.innerText = message;
             notifIcon.innerText = icon;
@@ -429,7 +434,7 @@
         // --- PWA Service Worker Registration ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(registration => console.log('ServiceWorker registrado con éxito:', registration.scope))
                     .catch(err => console.log('Fallo en el registro del ServiceWorker:', err));
             });

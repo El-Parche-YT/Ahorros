@@ -1,7 +1,7 @@
 const CACHE_NAME = 'ahorro-pro-cache-v1';
 // Lista de archivos para guardar en caché.
 const urlsToCache = [
-  '/',
+  './',
   'index.html',
   'Login.html',
   'mapa.jpeg', // Fondo de la página de login
