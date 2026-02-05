@@ -1,0 +1,22 @@
+{
+  "name": "Mi Ahorro Pro",
+  "short_name": "AhorroPro",
+  "description": "Tu billetera digital para gestionar ahorros de forma sencilla.",
+  "start_url": "Login.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "imagen/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "imagen/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

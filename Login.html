@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PWA Manifest & Theme -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00d4ff">
+
     <title>Login Ahorros</title>
     <style>
         /* Estilos Base */
@@ -421,6 +425,15 @@
             // Cambiar color del icono para indicar estado activo
             togglePassword.style.color = type === 'text' ? '#00d4ff' : 'rgba(255, 255, 255, 0.6)';
         });
+
+        // --- PWA Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('ServiceWorker registrado con éxito:', registration.scope))
+                    .catch(err => console.log('Fallo en el registro del ServiceWorker:', err));
+            });
+        }
     </script>
 </body>
 </html>
